@@ -17,8 +17,27 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    buildTypes {
+    dataBinding{
+        enabled = true
+    }
+
+    signingConfigs {
         release {
+            keyAlias 'my-key-alias'
+            keyPassword '123456'
+            storeFile file('../my-release-key.keystore')
+            storePassword '123456'
+        }
+    }
+
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -33,6 +52,17 @@ android {
 }
 
 dependencies {
+
+    implementation 'com.squareup.okhttp3:okhttp:4.7.2'
+
+    debugImplementation 'com.plutolib:pluto:2.1.2'
+    releaseImplementation 'com.plutolib:pluto-no-op:2.1.2'
+
+    debugImplementation 'com.plutolib.plugins:network:2.1.2'
+    releaseImplementation 'com.plutolib.plugins:network-no-op:2.1.2'
+
+
+    implementation project(path: ':repository')
 
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
